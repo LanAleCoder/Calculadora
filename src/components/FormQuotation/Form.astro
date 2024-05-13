@@ -1,0 +1,100 @@
+---
+
+---
+
+<div class="form__quotation-container">
+  <form action="" class="form__quoation-form">
+    <div class="form__quotation-form-gruop">
+      <label class="form__quotation-form-group-label" for="price">Precio</label>
+      <input
+        class="form__quotation-form-group-input"
+        type="number"
+        name="price"
+        id="price"
+        placeholder="Precio"
+      />
+    </div>
+    <div class="form__quotation-form-gruop">
+      <label class="form__quotation-form-group-label" for="dues">Meses</label>
+      <select class="form__quotation-form-group-select" name="dues" id="dues">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="6">6</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="15">15</option>
+        <option value="18">18</option>
+      </select>
+    </div>
+    <span class="form__quotation-result"> </span>
+    <button type="submit">Calcular</button>
+  </form>
+</div>
+
+<script>
+  const form = document.querySelector(".form__quoation-form");
+  const price = document.querySelector("#price");
+  const dues = document.querySelector("#dues");
+  const result = document.querySelector(".form__quotation-result");
+
+  function calculateIncreasePrice(percent: number, price: number) {
+    const priceInCents = price * 100;
+    const increasePriceInCents = Math.round(priceInCents * (percent / 100));
+    const finalPrice = increasePriceInCents;
+    return (finalPrice / 100).toFixed(2);
+  }
+
+  if (form && price && dues && result) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const priceValue = parseFloat((price as HTMLInputElement).value);
+      const duesValue = (dues as HTMLSelectElement).value;
+      const percents: { [key: string]: number } = {
+        2: 7.36,
+        3: 7.86,
+        6: 9.11,
+        10: 10.5,
+        12: 10.11,
+        15: 12.11,
+        18: 14.11,
+      };
+      const percent = percents[duesValue];
+      const increasePrice = calculateIncreasePrice(percent || 0, priceValue);
+      const IVA = calculateIncreasePrice(12, parseFloat(increasePrice));
+      const total = priceValue + parseFloat(increasePrice) + parseFloat(IVA);
+      result.textContent = `Precio total: ${total.toFixed(2)}`;
+    });
+  }
+</script>
+
+<style>
+  .form__quoation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .form__quotation-form-gruop {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .form__quotation-form-group-input {
+    height: 55px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    padding-left: 15px;
+    padding-right: 10px;
+  }
+
+  .form__quotation-form-group-select {
+    height: 55px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    padding-left: 15px;
+    padding-right: 10px;
+  }
+
+  .form__quotation-form-group-select option {
+    color: #000;
+  }
+</style>
